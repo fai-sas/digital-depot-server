@@ -18,4 +18,8 @@ router.get('/', PostControllers.getAllPosts)
 
 router.get('/:id', PostControllers.getSinglePost)
 
+router.put('/upvote/:id', PostControllers.upVote)
+
+router.put('/downvote/:id', PostControllers.downVote)
+
 export const PostRoutes = router

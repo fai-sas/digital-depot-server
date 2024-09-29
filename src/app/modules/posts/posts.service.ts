@@ -18,7 +18,7 @@ const createPostIntoDb = async (payload: TPosts) => {
 }
 
 const getAllPostsFromDB = async (query: Record<string, unknown>) => {
-  const productQuery = new QueryBuilder(Post.find(), query)
+  const productQuery = new QueryBuilder(Post.find().populate('postedBy'), query)
     .search(PostSearchableFields)
     .filter()
     .sort()
@@ -41,11 +41,53 @@ const getSinglePostFromDb = async (id: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
   }
 
-  return result
+  return result.populate('postedBy')
+}
+
+const upVoteIntoDb = async (id: string) => {
+  const post = await Post.findById(id)
+
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
+  }
+
+  const updatedPost = await Post.findByIdAndUpdate(
+    id,
+    { upvote: (post.upvote ?? 0) + 1, totalVotes: post.totalVotes + 1 },
+
+    // Increment upvote, use 0 if it's undefined
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+
+  return updatedPost
+}
+
+const downVoteIntoDb = async (id: string) => {
+  const post = await Post.findById(id)
+
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
+  }
+
+  const updatedPost = await Post.findByIdAndUpdate(
+    id,
+    { downvote: (post.downvote ?? 0) + 1, totalVotes: post.totalVotes - 1 }, // Decrement upvote, use 0 if it's undefined
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+
+  return updatedPost
 }
 
 export const PostServices = {
   createPostIntoDb,
   getAllPostsFromDB,
   getSinglePostFromDb,
+  upVoteIntoDb,
+  downVoteIntoDb,
 }

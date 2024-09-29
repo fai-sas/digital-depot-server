@@ -23,11 +23,17 @@ const postSchema = new Schema<TPosts>(
       type: Boolean,
       default: false,
     },
+    totalVotes: {
+      type: Number,
+      default: 0,
+    },
     upvote: {
       type: Number,
+      default: 0,
     },
     downvote: {
       type: Number,
+      default: 0,
     },
     // comments: {
     //   type: Schema.Types.ObjectId,
@@ -44,10 +50,25 @@ const postSchema = new Schema<TPosts>(
     price: {
       type: Number,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 )
+
+// filter out deleted documents
+postSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
+
+postSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
 
 export const Post = model<TPosts>('Posts', postSchema)

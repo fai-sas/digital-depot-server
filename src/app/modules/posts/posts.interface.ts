@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Model, Schema } from 'mongoose'
 
 interface TPosts {
   title: string
@@ -6,12 +6,14 @@ interface TPosts {
   images: string[]
   category: 'Web' | 'Software Engineering' | 'AI' | 'Data Science'
   isPremium: boolean
+  totalVotes: number
   upvote?: number
   downvote?: number
   // comments?: Schema.Types.ObjectId
   postedBy: Schema.Types.ObjectId
   ratings?: number
   price?: number
+  isDeleted: boolean
 }
 
 export default TPosts

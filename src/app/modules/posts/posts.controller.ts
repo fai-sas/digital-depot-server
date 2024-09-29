@@ -17,7 +17,7 @@ const createPost = catchAsync(async (req, res) => {
 
 const getAllPosts = catchAsync(async (req, res) => {
   const result = await PostServices.getAllPostsFromDB(req.query)
-  console.log(req.query)
+  // console.log(req.query)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -40,8 +40,34 @@ const getSinglePost = catchAsync(async (req, res) => {
   })
 })
 
+const upVote = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await PostServices.upVoteIntoDb(id)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Post up voted successfully',
+    data: result,
+  })
+})
+
+const downVote = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await PostServices.downVoteIntoDb(id)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Post down voted successfully',
+    data: result,
+  })
+})
+
 export const PostControllers = {
   createPost,
   getAllPosts,
   getSinglePost,
+  upVote,
+  downVote,
 }

@@ -40,7 +40,8 @@ export class QueryBuilder<T> {
     return this
   }
   sort() {
-    let sortBy = '-createdAt'
+    // let sortBy = '-createdAt'
+    let sortBy = '-totalVotes'
 
     if (this.query?.sortBy) {
       sortBy = this.query.sortBy as string
