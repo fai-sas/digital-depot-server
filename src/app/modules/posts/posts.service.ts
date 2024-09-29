@@ -22,7 +22,7 @@ const getAllPostsFromDB = async (query: Record<string, unknown>) => {
     .search(PostSearchableFields)
     .filter()
     .sort()
-    .paginate()
+    // .paginate()
     .fields()
 
   const meta = await productQuery.countTotal()
