@@ -100,7 +100,8 @@ const blockUserIntoDb = async (id: string) => {
 
   const result = await User.findByIdAndUpdate(
     id,
-    { status: 'BLOCKED' },
+    { isBlocked: !isUserExists?.isBlocked },
+
     {
       new: true,
       runValidators: true,

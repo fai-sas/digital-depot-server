@@ -17,8 +17,10 @@ export interface TUser {
   mobileNumber?: string
   profilePhoto?: string
   isDeleted: boolean
+  isBlocked: boolean
   createdAt?: Date
   updatedAt?: Date
+  isVerified: boolean
 }
 
 export interface UserModel extends Model<TUser> {
