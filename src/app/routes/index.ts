@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { UserRoutes } from '../modules/user/user.route'
 import { AuthRoutes } from '../modules/auth/auth.routes'
+import { PostRoutes } from '../modules/posts/posts.route'
 
 const router = Router()
 
@@ -12,6 +13,10 @@ const moduleRoutes = [
   {
     path: '/user',
     routes: UserRoutes,
+  },
+  {
+    path: '/posts',
+    routes: PostRoutes,
   },
 ]
 
