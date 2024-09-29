@@ -84,10 +84,30 @@ const downVoteIntoDb = async (id: string) => {
   return updatedPost
 }
 
+const deletePostFromDb = async (id: string) => {
+  const isPostExists = await Post.findById(id)
+
+  if (!isPostExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
+  }
+
+  const result = await Post.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+
+  return result
+}
+
 export const PostServices = {
   createPostIntoDb,
   getAllPostsFromDB,
   getSinglePostFromDb,
   upVoteIntoDb,
   downVoteIntoDb,
+  deletePostFromDb,
 }

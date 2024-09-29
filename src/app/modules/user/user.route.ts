@@ -10,7 +10,8 @@ import { upload } from '../../utils/sendImageToCloudinary'
 
 const router = express.Router()
 
-router.get('/', auth(USER_ROLE.ADMIN), UserControllers.getAllUsers)
+// router.get('/', auth(USER_ROLE.ADMIN), UserControllers.getAllUsers)
+router.get('/', UserControllers.getAllUsers)
 
 router.get(
   '/profile',

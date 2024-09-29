@@ -64,10 +64,23 @@ const downVote = catchAsync(async (req, res) => {
   })
 })
 
+const deletePost = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await PostServices.deletePostFromDb(id)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Post Deleted successfully',
+    data: result,
+  })
+})
+
 export const PostControllers = {
   createPost,
   getAllPosts,
   getSinglePost,
   upVote,
   downVote,
+  deletePost,
 }

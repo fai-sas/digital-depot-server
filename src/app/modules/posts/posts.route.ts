@@ -22,4 +22,6 @@ router.put('/upvote/:id', PostControllers.upVote)
 
 router.put('/downvote/:id', PostControllers.downVote)
 
+router.delete('/:id', PostControllers.deletePost)
+
 export const PostRoutes = router
