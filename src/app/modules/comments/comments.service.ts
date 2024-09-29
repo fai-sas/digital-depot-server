@@ -33,7 +33,7 @@ const createCommentIntoDb = async (payload: Partial<TComments>) => {
     session.endSession()
 
     return result
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction()
     session.endSession()
     throw new AppError(httpStatus.BAD_REQUEST, `${error?.message}`)
@@ -70,8 +70,43 @@ const getSingleCommentFromDb = async (id: string) => {
   return result
 }
 
+const updateCommentIntoDb = async (id: string, payload: Partial<TComments>) => {
+  const isCommentExists = await Comments.findById(id)
+
+  if (!isCommentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Comment Not Found')
+  }
+
+  const result = await Comments.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  })
+
+  await result?.populate('post')
+  await result?.populate('user')
+
+  return result
+}
+
+const deleteCommentFromDb = async (id: string) => {
+  const isCommentExists = await Comments.findById(id)
+
+  if (!isCommentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Comment Not Found')
+  }
+
+  const result = await Comments.findByIdAndDelete(id, {
+    new: true,
+    runValidators: true,
+  })
+
+  return result
+}
+
 export const CommentServices = {
   createCommentIntoDb,
   getAllCommentsFromDB,
   getSingleCommentFromDb,
+  updateCommentIntoDb,
+  deleteCommentFromDb,
 }

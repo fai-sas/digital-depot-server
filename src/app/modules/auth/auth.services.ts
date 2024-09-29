@@ -80,6 +80,8 @@ const signInUserIntoDb = async (payload: Partial<TUser>) => {
     mobileNumber: user.mobileNumber,
     role: user.role,
     status: user.status,
+    followers: user.followers,
+    following: user.following,
   }
 
   const accessToken = createToken(

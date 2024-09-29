@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post(
   '/create-comment',
-  // auth(USER_ROLE.USER),
+  auth(USER_ROLE.USER),
   CommentControllers.createComment
 )
 
@@ -22,5 +22,13 @@ router.get(
   // auth(USER_ROLE.USER),
   CommentControllers.getSingleComment
 )
+
+router.put(
+  '/update/:id',
+  auth(USER_ROLE.USER),
+  CommentControllers.updateComment
+)
+
+router.delete('/:id', auth(USER_ROLE.USER), CommentControllers.deleteComment)
 
 export const CommentRoutes = router

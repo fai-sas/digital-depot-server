@@ -8,7 +8,10 @@ import { TImageFile } from '../../interface/image.interface'
 import { QueryBuilder } from '../../builder/QueryBuilder'
 
 const getAllUsersFromDB = async (query: Record<string, unknown>) => {
-  const userQuery = new QueryBuilder(User.find(), query)
+  const userQuery = new QueryBuilder(
+    User.find().populate('following').populate('followers'),
+    query
+  )
     .search(UserSearchableFields)
     .filter()
     .sort()
@@ -158,24 +161,70 @@ export const followUserIntoDb = async (
   await currentUser.save()
   await targetUser.save()
 
-  return { message: 'User followed successfully.' }
+  return {
+    message: 'User followed successfully.',
+  }
 }
+
+// export const unFollowUserIntoDb = async (
+//   currentUserId: string,
+//   unFollowUserId: string
+// ) => {
+//   if (currentUserId === unFollowUserId) {
+//     throw new AppError(httpStatus.BAD_REQUEST, 'You cannot un follow yourself')
+//   }
+
+//   const currentUser = await User.findById(currentUserId)
+//   const targetUser = await User.findById(unFollowUserId)
+
+//   if (!currentUser || !targetUser) {
+//     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found')
+//   }
+
+//   if (!currentUser.following.includes(unFollowUserId)) {
+//     throw new AppError(
+//       httpStatus.BAD_REQUEST,
+//       'You are not following this user'
+//     )
+//   }
+
+//   currentUser.following = currentUser.following.filter(
+//     (userId: string) => userId !== unFollowUserId
+//   )
+//   targetUser.followers = targetUser.followers.filter(
+//     (userId: string) => userId !== currentUserId
+//   )
+
+//   await currentUser.save()
+//   await targetUser.save()
+
+//   return { message: 'User un followed successfully.' }
+// }
+
+import { Types } from 'mongoose'
+import { AppError } from '../utils/appError' // Assuming you have a custom AppError utility
+import { User } from './user.model' // Assuming your user model is imported like this
+import httpStatus from 'http-status' // Assuming you're using http-status for error codes
 
 export const unFollowUserIntoDb = async (
   currentUserId: string,
   unFollowUserId: string
 ) => {
+  // Ensure the user isn't trying to unfollow themselves
   if (currentUserId === unFollowUserId) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'You cannot un follow yourself')
+    throw new AppError(httpStatus.BAD_REQUEST, 'You cannot unfollow yourself')
   }
 
+  // Find both users in the database
   const currentUser = await User.findById(currentUserId)
   const targetUser = await User.findById(unFollowUserId)
 
+  // If either user doesn't exist, return an error
   if (!currentUser || !targetUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found')
   }
 
+  // Check if the current user is actually following the target user
   if (!currentUser.following.includes(unFollowUserId)) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
@@ -183,17 +232,22 @@ export const unFollowUserIntoDb = async (
     )
   }
 
+  // Remove the target user from the current user's 'following' list
   currentUser.following = currentUser.following.filter(
-    (userId: string) => userId !== unFollowUserId
-  )
-  targetUser.followers = targetUser.followers.filter(
-    (userId: string) => userId !== currentUserId
+    (userId: Types.ObjectId) => userId.toString() !== unFollowUserId
   )
 
+  // Remove the current user from the target user's 'followers' list
+  targetUser.followers = targetUser.followers.filter(
+    (userId: Types.ObjectId) => userId.toString() !== currentUserId
+  )
+
+  // Save both users after the changes
   await currentUser.save()
   await targetUser.save()
 
-  return { message: 'User un followed successfully.' }
+  // Return a success message
+  return { message: 'User unf ollowed successfully.' }
 }
 
 export const UserServices = {

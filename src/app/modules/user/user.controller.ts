@@ -95,7 +95,7 @@ const deleteUser = catchAsync(async (req, res) => {
 const followUser = catchAsync(async (req, res) => {
   const { followUserId } = req.params
   const userId = req.user.userId
-  const result = await UserServices.followUserIntoDb(followUserId, userId)
+  const result = await UserServices.followUserIntoDb(userId, followUserId)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -108,7 +108,7 @@ const followUser = catchAsync(async (req, res) => {
 const unFollowUser = catchAsync(async (req, res) => {
   const { unFollowUserId } = req.params
   const userId = req.user.userId
-  const result = await UserServices.unFollowUserIntoDb(unFollowUserId, userId)
+  const result = await UserServices.unFollowUserIntoDb(userId, unFollowUserId)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
