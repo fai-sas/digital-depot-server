@@ -17,15 +17,17 @@ const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
     }
 
     // check if the authorization header starts with "Bearer"
-    if (!authorizationHeader.startsWith('Bearer ')) {
-      throw new AppError(
-        httpStatus.UNAUTHORIZED,
-        'Token must start with "Bearer"'
-      )
-    }
+    // if (!authorizationHeader.startsWith('Bearer ')) {
+    //   throw new AppError(
+    //     httpStatus.UNAUTHORIZED,
+    //     'Token must start with "Bearer"'
+    //   )
+    // }
 
     // extract the token
-    const token = authorizationHeader.split(' ')[1]
+
+    // const token = authorizationHeader.split(' ')[1]
+    const token = authorizationHeader
 
     // check if the given token is valid
     const decoded = jwt.verify(

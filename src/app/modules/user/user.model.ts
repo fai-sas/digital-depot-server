@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import { Schema, model } from 'mongoose'
 import { TUser, UserModel } from './user.interface'
 import config from '../../config'
-import { USER_ROLE, USER_STATUS } from './user.constant'
+import { USER_ROLE, USER_STATUS, USER_TYPE } from './user.constant'
 
 const userSchema = new Schema<TUser, UserModel>(
   {
@@ -15,6 +15,23 @@ const userSchema = new Schema<TUser, UserModel>(
       enum: Object.keys(USER_ROLE),
       default: 'USER',
     },
+    userType: {
+      type: String,
+      enum: Object.keys(USER_TYPE),
+      default: 'BASIC',
+    },
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     email: {
       type: String,
       required: true,
@@ -24,11 +41,6 @@ const userSchema = new Schema<TUser, UserModel>(
         'Please fill a valid email address',
       ],
     },
-    // password: {
-    //   type: String,
-    //   required: true,
-    //   select: 0,
-    // },
     password: {
       type: String,
       required: function () {

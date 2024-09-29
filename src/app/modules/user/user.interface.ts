@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Model } from 'mongoose'
-import { USER_ROLE, USER_STATUS } from './user.constant'
+import { Model, Schema } from 'mongoose'
+import { USER_ROLE, USER_STATUS, USER_TYPE } from './user.constant'
 
 export interface TUser {
   _id: string
@@ -8,7 +8,10 @@ export interface TUser {
   role: keyof typeof USER_ROLE
   email: string
   password?: string
+  followers: Schema.Types.ObjectId
+  following: Schema.Types.ObjectId
   isSocialLogin: boolean
+  userType: keyof typeof USER_TYPE
   status: keyof typeof USER_STATUS
   passwordChangedAt?: Date
   mobileNumber?: string

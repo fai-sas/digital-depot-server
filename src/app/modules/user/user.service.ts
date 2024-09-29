@@ -132,9 +132,11 @@ const deleteUserIntoDb = async (id: string) => {
 export const UserServices = {
   getAllUsersFromDB,
   getSingleUserFromDb,
+  followUserIntoDb,
   getCurrentUserProfileFromDB,
   updateCurrentUserProfileIntoDB,
   makeUserAnAdminIntoDb,
   blockUserIntoDb,
   deleteUserIntoDb,
+  unFollowUserIntoDb,
 }

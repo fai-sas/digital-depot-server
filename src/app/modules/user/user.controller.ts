@@ -100,4 +100,6 @@ export const UserControllers = {
   makeUserAnAdmin,
   blockUser,
   deleteUser,
+  followUser,
+  unFollowUser,
 }

@@ -18,9 +18,9 @@ router.get('/', PostControllers.getAllPosts)
 
 router.get('/:id', PostControllers.getSinglePost)
 
-router.put('/upvote/:id', PostControllers.upVote)
+router.put('/upvote/:id', auth(USER_ROLE.USER), PostControllers.upVote)
 
-router.put('/downvote/:id', PostControllers.downVote)
+router.put('/downvote/:id', auth(USER_ROLE.USER), PostControllers.downVote)
 
 router.put('/update/:id', PostControllers.updatePost)
 

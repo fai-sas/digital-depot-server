@@ -42,7 +42,8 @@ const getSinglePost = catchAsync(async (req, res) => {
 
 const upVote = catchAsync(async (req, res) => {
   const { id } = req.params
-  const result = await PostServices.upVoteIntoDb(id)
+  const userId = req.user.userId
+  const result = await PostServices.upVoteIntoDb(id, userId)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -54,7 +55,8 @@ const upVote = catchAsync(async (req, res) => {
 
 const downVote = catchAsync(async (req, res) => {
   const { id } = req.params
-  const result = await PostServices.downVoteIntoDb(id)
+  const userId = req.user.userId
+  const result = await PostServices.downVoteIntoDb(id, userId)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

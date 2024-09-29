@@ -3,6 +3,11 @@ export const USER_ROLE = {
   USER: 'USER',
 } as const
 
+export const USER_TYPE = {
+  BASIC: 'BASIC',
+  PREMIUM: 'PREMIUM',
+} as const
+
 export const USER_STATUS = {
   ACTIVE: 'ACTIVE',
   BLOCKED: 'BLOCKED',

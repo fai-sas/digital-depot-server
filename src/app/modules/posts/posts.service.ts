@@ -44,44 +44,82 @@ const getSinglePostFromDb = async (id: string) => {
   return result.populate('postedBy')
 }
 
-const upVoteIntoDb = async (id: string) => {
-  const post = await Post.findById(id)
+const upVoteIntoDb = async (postId: string, userId: string) => {
+  const post = await Post.findById(postId)
 
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
   }
 
-  const updatedPost = await Post.findByIdAndUpdate(
-    id,
-    { upvote: (post.upvote ?? 0) + 1, totalVotes: post.totalVotes + 1 },
+  post.upvote = post.upvote || 0
+  post.downvote = post.downvote || 0
 
-    // Increment upvote, use 0 if it's undefined
-    {
-      new: true,
-      runValidators: true,
-    }
+  // Find if user has already voted on this post
+  const existingVote = post.votes.find(
+    (vote) => vote.user.toString() === userId
   )
 
-  return updatedPost
+  if (existingVote) {
+    if (existingVote.voteType === 'upvote') {
+      // If already up voted, prevent up voting again
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'You have already up voted this post'
+      )
+    } else {
+      // Toggle from downvote to upvote
+      post.downvote -= 1
+      post.upvote += 1
+      existingVote.voteType = 'upvote'
+    }
+  } else {
+    // If no existing vote, add new upvote
+    post.upvote += 1
+    post.votes.push({ user: userId, voteType: 'upvote' })
+  }
+
+  post.totalVotes = post.upvote - post.downvote
+  await post.save()
+  return post
 }
 
-const downVoteIntoDb = async (id: string) => {
-  const post = await Post.findById(id)
+const downVoteIntoDb = async (postId: string, userId: string) => {
+  const post = await Post.findById(postId)
 
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
   }
 
-  const updatedPost = await Post.findByIdAndUpdate(
-    id,
-    { downvote: (post.downvote ?? 0) + 1, totalVotes: post.totalVotes - 1 }, // Decrement upvote, use 0 if it's undefined
-    {
-      new: true,
-      runValidators: true,
-    }
+  post.upvote = post.upvote || 0
+  post.downvote = post.downvote || 0
+
+  // Find if user has already voted on this post
+  const existingVote = post.votes.find(
+    (vote) => vote.user.toString() === userId
   )
 
-  return updatedPost
+  if (existingVote) {
+    if (existingVote.voteType === 'downvote') {
+      // If already down voted, prevent down voting again
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'You have already down voted this post'
+      )
+    } else {
+      // Toggle from upvote to downvote
+      post.upvote -= 1
+      post.downvote += 1
+      existingVote.voteType = 'downvote'
+    }
+  } else {
+    // If no existing vote, add new downvote
+    post.downvote += 1
+    post.votes.push({ user: userId, voteType: 'downvote' })
+  }
+
+  post.totalVotes = post.upvote - post.downvote
+  await post.save()
+  return post
 }
 
 const updatePostIntoDb = async (id: string, payload: Partial<TPosts>) => {

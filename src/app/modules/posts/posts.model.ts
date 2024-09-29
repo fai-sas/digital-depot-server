@@ -23,6 +23,20 @@ const postSchema = new Schema<TPosts>(
       type: Boolean,
       default: false,
     },
+    votes: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+          required: true,
+        },
+        voteType: {
+          type: String,
+          enum: ['upvote', 'downvote'],
+          required: true,
+        },
+      },
+    ],
     totalVotes: {
       type: Number,
       default: 0,
@@ -35,10 +49,6 @@ const postSchema = new Schema<TPosts>(
       type: Number,
       default: 0,
     },
-    // comments: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'Comments',
-    // },
     postedBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
