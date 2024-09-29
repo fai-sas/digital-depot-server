@@ -19,6 +19,18 @@ router.get(
   UserControllers.getCurrentUserProfile
 )
 
+router.post(
+  '/follow/:followUserId',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  UserControllers.followUser
+)
+
+router.post(
+  '/unfollow/:unFollowUserId',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  UserControllers.unFollowUser
+)
+
 router.get(
   '/:id',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),

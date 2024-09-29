@@ -129,6 +129,72 @@ const deleteUserIntoDb = async (id: string) => {
   return result
 }
 
+export const followUserIntoDb = async (
+  currentUserId: string,
+  followUserId: string
+) => {
+  if (currentUserId === followUserId) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'You cannot follow yourself')
+  }
+
+  const currentUser = await User.findById(currentUserId)
+  const targetUser = await User.findById(followUserId)
+
+  if (!currentUser || !targetUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found')
+  }
+
+  if (currentUser.following.includes(followUserId)) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'You are already following this user'
+    )
+  }
+
+  currentUser.following.push(followUserId)
+  targetUser.followers.push(currentUserId)
+
+  await currentUser.save()
+  await targetUser.save()
+
+  return { message: 'User followed successfully.' }
+}
+
+export const unFollowUserIntoDb = async (
+  currentUserId: string,
+  unFollowUserId: string
+) => {
+  if (currentUserId === unFollowUserId) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'You cannot un follow yourself')
+  }
+
+  const currentUser = await User.findById(currentUserId)
+  const targetUser = await User.findById(unFollowUserId)
+
+  if (!currentUser || !targetUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found')
+  }
+
+  if (!currentUser.following.includes(unFollowUserId)) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'You are not following this user'
+    )
+  }
+
+  currentUser.following = currentUser.following.filter(
+    (userId: string) => userId !== unFollowUserId
+  )
+  targetUser.followers = targetUser.followers.filter(
+    (userId: string) => userId !== currentUserId
+  )
+
+  await currentUser.save()
+  await targetUser.save()
+
+  return { message: 'User un followed successfully.' }
+}
+
 export const UserServices = {
   getAllUsersFromDB,
   getSingleUserFromDb,

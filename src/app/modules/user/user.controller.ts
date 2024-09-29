@@ -92,6 +92,32 @@ const deleteUser = catchAsync(async (req, res) => {
   })
 })
 
+const followUser = catchAsync(async (req, res) => {
+  const { followUserId } = req.params
+  const userId = req.user.userId
+  const result = await UserServices.followUserIntoDb(followUserId, userId)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User Followed successfully',
+    data: result,
+  })
+})
+
+const unFollowUser = catchAsync(async (req, res) => {
+  const { unFollowUserId } = req.params
+  const userId = req.user.userId
+  const result = await UserServices.unFollowUserIntoDb(unFollowUserId, userId)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User Un Followed successfully',
+    data: result,
+  })
+})
+
 export const UserControllers = {
   getAllUsers,
   getSingleUser,
