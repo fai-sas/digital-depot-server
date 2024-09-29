@@ -3,6 +3,7 @@ import { UserRoutes } from '../modules/user/user.route'
 import { AuthRoutes } from '../modules/auth/auth.routes'
 import { PostRoutes } from '../modules/posts/posts.route'
 import { CommentRoutes } from '../modules/comments/comments.route'
+import { ActivityRoutes } from '../modules/activity/activity.route'
 
 const router = Router()
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: '/comments',
     routes: CommentRoutes,
+  },
+  {
+    path: '/activity',
+    routes: ActivityRoutes,
   },
 ]
 

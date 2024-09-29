@@ -19,6 +19,12 @@ router.get(
   UserControllers.getCurrentUserProfile
 )
 
+router.put(
+  '/profile/update',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  UserControllers.updateCurrentUserProfile
+)
+
 router.post(
   '/follow/:followUserId',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
@@ -45,7 +51,7 @@ router.put(
 
 router.put('/block-user/:id', auth(USER_ROLE.ADMIN), UserControllers.blockUser)
 
-router.put(
+router.delete(
   '/delete-user/:id',
   auth(USER_ROLE.ADMIN),
   UserControllers.deleteUser

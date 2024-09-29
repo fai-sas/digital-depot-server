@@ -1,5 +1,5 @@
 import httpStatus from 'http-status'
-import { TUserProfileUpdate } from './user.interface'
+import { TUser, TUserProfileUpdate } from './user.interface'
 import { User } from './user.model'
 import AppError from '../../errors/AppError'
 import { JwtPayload } from 'jsonwebtoken'
@@ -50,14 +50,38 @@ const getCurrentUserProfileFromDB = async (user: JwtPayload) => {
   return profile
 }
 
+// const updateCurrentUserProfileIntoDB = async (
+//   user: JwtPayload,
+//   data: Partial<TUserProfileUpdate>,
+//   profilePhoto: TImageFile
+// ) => {
+//   const filter = {
+//     email: user.email,
+//     status: USER_STATUS.ACTIVE,
+//   }
+
+//   const profile = await User.findOne(filter)
+
+//   if (!profile) {
+//     throw new AppError(httpStatus.NOT_FOUND, 'User profile does not exists!')
+//   }
+
+//   if (profilePhoto) {
+//     data.profilePhoto = profilePhoto.path
+//   } else {
+//     delete data.profilePhoto
+//   }
+
+//   return await User.findOneAndUpdate(filter, data, { new: true })
+// }
+
 const updateCurrentUserProfileIntoDB = async (
   user: JwtPayload,
-  data: Partial<TUserProfileUpdate>,
-  profilePhoto: TImageFile
+  payload: Partial<TUser>
 ) => {
   const filter = {
+    name: user.name,
     email: user.email,
-    status: USER_STATUS.ACTIVE,
   }
 
   const profile = await User.findOne(filter)
@@ -66,13 +90,7 @@ const updateCurrentUserProfileIntoDB = async (
     throw new AppError(httpStatus.NOT_FOUND, 'User profile does not exists!')
   }
 
-  if (profilePhoto) {
-    data.profilePhoto = profilePhoto.path
-  } else {
-    delete data.profilePhoto
-  }
-
-  return await User.findOneAndUpdate(filter, data, { new: true })
+  return await User.findOneAndUpdate(filter, payload, { new: true })
 }
 
 const makeUserAnAdminIntoDb = async (id: string) => {
@@ -165,46 +183,6 @@ export const followUserIntoDb = async (
     message: 'User followed successfully.',
   }
 }
-
-// export const unFollowUserIntoDb = async (
-//   currentUserId: string,
-//   unFollowUserId: string
-// ) => {
-//   if (currentUserId === unFollowUserId) {
-//     throw new AppError(httpStatus.BAD_REQUEST, 'You cannot un follow yourself')
-//   }
-
-//   const currentUser = await User.findById(currentUserId)
-//   const targetUser = await User.findById(unFollowUserId)
-
-//   if (!currentUser || !targetUser) {
-//     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found')
-//   }
-
-//   if (!currentUser.following.includes(unFollowUserId)) {
-//     throw new AppError(
-//       httpStatus.BAD_REQUEST,
-//       'You are not following this user'
-//     )
-//   }
-
-//   currentUser.following = currentUser.following.filter(
-//     (userId: string) => userId !== unFollowUserId
-//   )
-//   targetUser.followers = targetUser.followers.filter(
-//     (userId: string) => userId !== currentUserId
-//   )
-
-//   await currentUser.save()
-//   await targetUser.save()
-
-//   return { message: 'User un followed successfully.' }
-// }
-
-import { Types } from 'mongoose'
-import { AppError } from '../utils/appError' // Assuming you have a custom AppError utility
-import { User } from './user.model' // Assuming your user model is imported like this
-import httpStatus from 'http-status' // Assuming you're using http-status for error codes
 
 export const unFollowUserIntoDb = async (
   currentUserId: string,

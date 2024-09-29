@@ -41,11 +41,25 @@ const getCurrentUserProfile = catchAsync(async (req, res) => {
   })
 })
 
+// const updateCurrentUserProfile = catchAsync(async (req, res) => {
+//   const result = await UserServices.updateCurrentUserProfileIntoDB(
+//     req.user,
+//     req.body,
+//     req.file as TImageFile
+//   )
+
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: httpStatus.OK,
+//     message: 'Profile updated successfully',
+//     data: result,
+//   })
+// })
+
 const updateCurrentUserProfile = catchAsync(async (req, res) => {
   const result = await UserServices.updateCurrentUserProfileIntoDB(
     req.user,
-    req.body,
-    req.file as TImageFile
+    req.body
   )
 
   sendResponse(res, {

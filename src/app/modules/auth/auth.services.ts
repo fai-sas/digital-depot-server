@@ -9,6 +9,8 @@ import { TUser } from '../user/user.interface'
 import { createToken } from './auth.utils'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { sendEmail } from '../../utils/sendEmail'
+import { ActivityLog } from '../activity/activity.model'
+import { ActivityServices } from '../activity/activity.service'
 
 const signUpUserIntoDb = async (payload: TUser) => {
   // const existingUser = await User.findOne({ email: payload.email })
@@ -95,6 +97,19 @@ const signInUserIntoDb = async (payload: Partial<TUser>) => {
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string
   )
+
+  // Log the activity with error handling
+  try {
+    console.log('Attempting to log activity...') // Add debug log
+    await ActivityServices.createActivityIntoDb(
+      user._id,
+      'User signed in',
+      `User signed in successfully with email: ${user.email}`
+    )
+    console.log('Activity logged successfully!') // Success log
+  } catch (error) {
+    console.error('Failed to log activity:', error) // Log the error
+  }
 
   return {
     accessToken,
