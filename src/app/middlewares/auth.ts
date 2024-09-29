@@ -37,6 +37,13 @@ const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
 
     const { userId, email, role, iat } = decoded
 
+    console.log('Decoded userId:', userId) // Ensure this is correct
+
+    // Check if userId is undefined or invalid
+    if (!userId) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'User ID missing in token!')
+    }
+
     // check if the user is exist
     const user = await User.findOne({ email })
 

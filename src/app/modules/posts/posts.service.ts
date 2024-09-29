@@ -4,6 +4,7 @@ import { PostSearchableFields } from './posts.constants'
 import TPosts from './posts.interface'
 import { Post } from './posts.model'
 import AppError from '../../errors/AppError'
+import { Types } from 'mongoose'
 
 const createPostIntoDb = async (payload: TPosts) => {
   const existingPost = await Post.findOne({ name: payload.title })
@@ -42,6 +43,17 @@ const getSinglePostFromDb = async (id: string) => {
   }
 
   return result.populate('postedBy')
+}
+
+const getUserPostFromDb = async (email: string) => {
+  const result = await Post.find().populate({
+    path: 'postedBy',
+    match: { email: email },
+  })
+
+  const filteredResult = result.filter((post) => post.postedBy !== null)
+
+  return filteredResult
 }
 
 const upVoteIntoDb = async (postId: string, userId: string) => {
@@ -172,6 +184,7 @@ export const PostServices = {
   createPostIntoDb,
   getAllPostsFromDB,
   getSinglePostFromDb,
+  getUserPostFromDb,
   upVoteIntoDb,
   downVoteIntoDb,
   updatePostIntoDb,

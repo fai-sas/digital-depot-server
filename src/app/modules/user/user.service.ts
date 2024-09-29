@@ -40,7 +40,7 @@ const getSingleUserFromDb = async (id: string) => {
 const getCurrentUserProfileFromDB = async (user: JwtPayload) => {
   const profile = await User.findOne({
     email: user.email,
-    status: USER_STATUS.ACTIVE,
+    // status: USER_STATUS.ACTIVE,
   })
 
   if (!profile) {

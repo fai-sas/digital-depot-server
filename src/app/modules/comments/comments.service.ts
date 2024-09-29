@@ -70,22 +70,58 @@ const getSingleCommentFromDb = async (id: string) => {
   return result
 }
 
+// const updateCommentIntoDb = async (id: string, payload: Partial<TComments>) => {
+//   const isCommentExists = await Comments.findById(id)
+
+//   if (!isCommentExists) {
+//     throw new AppError(httpStatus.NOT_FOUND, 'Requested Comment Not Found')
+//   }
+
+//   const result = await Comments.findByIdAndUpdate(id, payload, {
+//     new: true,
+//     runValidators: true,
+//   })
+
+//   await result?.populate('post')
+//   await result?.populate('user')
+
+//   return result
+// }
+
 const updateCommentIntoDb = async (id: string, payload: Partial<TComments>) => {
-  const isCommentExists = await Comments.findById(id)
+  const session = await mongoose.startSession() // Start a Mongoose session
 
-  if (!isCommentExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Requested Comment Not Found')
+  try {
+    session.startTransaction() // Begin the transaction
+
+    // Check if the comment exists
+    const isCommentExists = await Comments.findById(id)
+
+    if (!isCommentExists) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Requested Comment Not Found')
+    }
+
+    // Perform the update
+    const result = await Comments.findByIdAndUpdate(id, payload, {
+      new: true, // Return the updated document
+      runValidators: true, // Run schema validators
+      session, // Use the transaction session
+    })
+
+    // Populate the post and user fields
+    await result?.populate('post')
+
+    // Commit the transaction
+    await session.commitTransaction()
+    session.endSession()
+
+    return result
+  } catch (error: any) {
+    // Rollback the transaction on error
+    await session.abortTransaction()
+    session.endSession()
+    throw new AppError(httpStatus.BAD_REQUEST, `${error?.message}`)
   }
-
-  const result = await Comments.findByIdAndUpdate(id, payload, {
-    new: true,
-    runValidators: true,
-  })
-
-  await result?.populate('post')
-  await result?.populate('user')
-
-  return result
 }
 
 const deleteCommentFromDb = async (id: string) => {

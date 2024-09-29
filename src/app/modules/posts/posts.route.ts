@@ -9,12 +9,16 @@ const router = express.Router()
 
 router.post(
   '/create-post',
-  // auth(USER_ROLE.USER),
+  auth(USER_ROLE.USER),
   // validateRequest(PostValidation.createPostValidationSchema),
   PostControllers.createPost
 )
 
 router.get('/', PostControllers.getAllPosts)
+
+router.get('/my-posts', auth(USER_ROLE.USER), PostControllers.getUserPosts)
+
+// router.get('/my-posts', PostControllers.getUserPosts)
 
 router.get('/:id', PostControllers.getSinglePost)
 

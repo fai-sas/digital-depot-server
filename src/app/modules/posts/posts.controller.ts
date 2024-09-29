@@ -40,6 +40,19 @@ const getSinglePost = catchAsync(async (req, res) => {
   })
 })
 
+const getUserPosts = catchAsync(async (req, res) => {
+  const user = req.user.email
+
+  const result = await PostServices.getUserPostFromDb(user)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'My Posts retrieved successfully',
+    data: result,
+  })
+})
+
 const upVote = catchAsync(async (req, res) => {
   const { id } = req.params
   const userId = req.user.userId
@@ -94,6 +107,7 @@ export const PostControllers = {
   createPost,
   getAllPosts,
   getSinglePost,
+  getUserPosts,
   upVote,
   downVote,
   updatePost,
