@@ -84,6 +84,33 @@ const downVoteIntoDb = async (id: string) => {
   return updatedPost
 }
 
+const updatePostIntoDb = async (id: string, payload: Partial<TPosts>) => {
+  const isPostExists = await Post.findById(id)
+
+  if (!isPostExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
+  }
+
+  const { images, ...remainingData } = payload
+
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingData,
+  }
+
+  if (images && Object.keys(images).length) {
+    for (const [key, value] of Object.entries(images)) {
+      modifiedUpdatedData[`images.${key}`] = value
+    }
+  }
+
+  const result = await Post.findByIdAndUpdate(id, modifiedUpdatedData, {
+    new: true,
+    runValidators: true,
+  })
+
+  return result?.populate('postedBy')
+}
+
 const deletePostFromDb = async (id: string) => {
   const isPostExists = await Post.findById(id)
 
@@ -109,5 +136,6 @@ export const PostServices = {
   getSinglePostFromDb,
   upVoteIntoDb,
   downVoteIntoDb,
+  updatePostIntoDb,
   deletePostFromDb,
 }

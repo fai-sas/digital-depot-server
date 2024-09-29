@@ -64,6 +64,18 @@ const downVote = catchAsync(async (req, res) => {
   })
 })
 
+const updatePost = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await PostServices.updatePostIntoDb(id, req.body)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Post updated successfully',
+    data: result,
+  })
+})
+
 const deletePost = catchAsync(async (req, res) => {
   const { id } = req.params
   const result = await PostServices.deletePostFromDb(id)
@@ -82,5 +94,6 @@ export const PostControllers = {
   getSinglePost,
   upVote,
   downVote,
+  updatePost,
   deletePost,
 }
