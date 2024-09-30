@@ -3,17 +3,17 @@ import { ActivityLog } from './activity.model'
 
 const createActivityIntoDb = async (userId, action, details) => {
   try {
-    console.log(`Logging activity for user: ${userId}, action: ${action}`) // Debug log
+    // console.log(`Logging activity for user: ${userId}, action: ${action}`)
     const result = await ActivityLog.create({
       user: userId,
       action,
       details,
     })
-    console.log('Activity log result:', result) // Output the result
+
     return result
   } catch (error) {
-    console.error('Error creating activity log:', error) // Log any error
-    throw error // Re-throw to handle higher up if needed
+    console.error('Error creating activity log:', error)
+    throw error
   }
 }
 

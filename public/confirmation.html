@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Confirmation</title>
+  </head>
+
+  <body
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+    "
+  >
+    <div
+      style="
+        text-align: center;
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+      "
+    >
+      <h1 style="font-size: 2.5rem; color: #4a4a4a; margin-bottom: 20px">
+        {{message}}
+      </h1>
+      <p
+        style="
+          font-size: 1rem;
+          color: #666;
+          line-height: 1.5;
+          margin-bottom: 30px;
+        "
+      >
+        Thank you for using our payment method, we appreciate your trust in our
+        services. If you have any questions or need further assistance, please
+        do not hesitate to contact us. We look forward to serving you again.
+      </p>
+      <a href="http://localhost:3000" style="text-decoration: none">
+        <button
+          style="
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+          "
+        >
+          Back Home
+        </button>
+      </a>
+    </div>
+  </body>
+</html>

@@ -9,6 +9,7 @@ export class QueryBuilder<T> {
     this.query = query
     this.modelQuery = modelQuery
   }
+
   search(searchableFields: string[]) {
     let search = ''
 
@@ -25,6 +26,7 @@ export class QueryBuilder<T> {
     })
     return this
   }
+
   paginate() {
     let limit: number = Number(this.query?.limit || 10)
 

@@ -3,6 +3,7 @@ import { Schema, model } from 'mongoose'
 const paymentSchema = new Schema(
   {
     user: {
+      userId: { type: Schema.Types.ObjectId, required: true },
       name: { type: String, required: true },
       email: { type: String, required: true },
       phone: { type: String, default: '01717123456' },

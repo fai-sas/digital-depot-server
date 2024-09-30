@@ -4,7 +4,7 @@ import sendResponse from '../../utils/sendResponse'
 import { ActivityServices } from './activity.service'
 
 const createActivity = catchAsync(async (req, res) => {
-  const userId = req.user.userId // Ensure you pass the user._id here
+  const userId = req.user.userId
   const { action, details } = req.body
 
   const result = await ActivityServices.createActivityIntoDb(

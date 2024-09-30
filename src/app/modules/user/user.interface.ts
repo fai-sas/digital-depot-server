@@ -21,6 +21,9 @@ export interface TUser {
   createdAt?: Date
   updatedAt?: Date
   isVerified: boolean
+  totalCost: number
+  paymentStatus?: 'Pending' | 'Paid' | 'Failed'
+  transactionId: string
 }
 
 export interface UserModel extends Model<TUser> {

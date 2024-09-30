@@ -81,9 +81,13 @@ const signInUserIntoDb = async (payload: Partial<TUser>) => {
     profilePhoto: user.profilePhoto,
     mobileNumber: user.mobileNumber,
     role: user.role,
+    userType: user.userType,
     status: user.status,
     followers: user.followers,
     following: user.following,
+    isVerified: user.isVerified,
+    totalCost: user.totalCost,
+    paymentStatus: user.paymentStatus,
   }
 
   const accessToken = createToken(
@@ -348,8 +352,6 @@ const resetPassword = async (
     token,
     config.jwt_access_secret as string
   ) as JwtPayload
-
-  console.log('Decoded token:', decoded)
 
   if (email !== decoded.email) {
     throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!')

@@ -20,6 +20,18 @@ const userSchema = new Schema<TUser, UserModel>(
       enum: Object.keys(USER_TYPE),
       default: 'BASIC',
     },
+    totalCost: {
+      type: Number,
+      default: 0,
+    },
+    transactionId: {
+      type: String,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['Pending', 'Paid', 'Failed'],
+      default: 'Pending',
+    },
     followers: [
       {
         type: Schema.Types.ObjectId,
