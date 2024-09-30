@@ -4,7 +4,6 @@ import { PostSearchableFields } from './posts.constants'
 import TPosts from './posts.interface'
 import { Post } from './posts.model'
 import AppError from '../../errors/AppError'
-import { Types } from 'mongoose'
 
 const createPostIntoDb = async (payload: TPosts) => {
   const existingPost = await Post.findOne({ name: payload.title })
@@ -36,13 +35,17 @@ const getAllPostsFromDB = async (query: Record<string, unknown>) => {
 }
 
 const getSinglePostFromDb = async (id: string) => {
-  const result = await Post.findById(id)
+  const result = await Post.findByIdAndUpdate(
+    id,
+    { $inc: { views: 1 } },
+    { new: true }
+  ).populate('postedBy')
 
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, 'Requested Post Not Found')
   }
 
-  return result.populate('postedBy')
+  return result
 }
 
 const getUserPostFromDb = async (email: string) => {

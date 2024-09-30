@@ -16,6 +16,7 @@ interface TPosts {
   upvote?: number
   downvote?: number
   postedBy: Schema.Types.ObjectId
+  views: number
   ratings?: number
   price?: number
   isDeleted: boolean
