@@ -10,7 +10,7 @@ export const initiatePayment = async (paymentData: any) => {
       tran_id: paymentData?.transactionId,
       success_url: `https://digital-depo-server.vercel.app/api/v1/payment/confirmation?transactionId=${paymentData.transactionId}&status=success`,
       fail_url: `https://digital-depo-server.vercel.app/api/v1/payment/confirmation?status=failed`,
-      cancel_url: 'https://digital-depo-server.vercel.app/api/v1',
+      cancel_url: 'https://digital-depot-client.vercel.app',
       amount: paymentData?.totalPrice,
       currency: 'USD',
       desc: 'Merchant Registration Payment',

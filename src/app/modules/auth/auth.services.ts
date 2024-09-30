@@ -48,8 +48,12 @@ export const socialRegisterUserIntoDb = async (payload: TLoginUser) => {
 }
 
 const signInUserIntoDb = async (payload: Partial<TUser>) => {
-  // const user = await User.findOne({ email: payload.email }).select('+password')
-  const user = await User.isUserExists(payload?.email as string)
+  const user = await User.findOne({ email: payload.email })
+    .select('+password')
+    .populate('followers')
+    .populate('following')
+
+  // const user = await User.isUserExists(payload?.email as string)
 
   // check if user exists
   if (!user) {

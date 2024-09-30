@@ -20,7 +20,7 @@ router.get(
 )
 
 router.put(
-  '/profile/update',
+  '/profile/update/:id',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   UserControllers.updateCurrentUserProfile
 )

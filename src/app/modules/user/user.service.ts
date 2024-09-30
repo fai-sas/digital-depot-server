@@ -47,7 +47,7 @@ const getCurrentUserProfileFromDB = async (user: JwtPayload) => {
     throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!')
   }
 
-  return profile
+  return profile.populate('followers')
 }
 
 // const updateCurrentUserProfileIntoDB = async (
@@ -76,21 +76,21 @@ const getCurrentUserProfileFromDB = async (user: JwtPayload) => {
 // }
 
 const updateCurrentUserProfileIntoDB = async (
-  user: JwtPayload,
-  payload: Partial<TUser>
+  id: string,
+  payload: Partial<TUserProfileUpdate>
 ) => {
-  const filter = {
-    name: user.name,
-    email: user.email,
+  const isUserExists = await User.findById(id)
+
+  if (!isUserExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested User Not Found')
   }
 
-  const profile = await User.findOne(filter)
+  const result = await User.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  })
 
-  if (!profile) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User profile does not exists!')
-  }
-
-  return await User.findOneAndUpdate(filter, payload, { new: true })
+  return result
 }
 
 const makeUserAnAdminIntoDb = async (id: string) => {

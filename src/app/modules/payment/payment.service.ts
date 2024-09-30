@@ -61,6 +61,7 @@ const confirmationService = async (transactionId: string, status: string) => {
         {
           paymentStatus: 'Paid',
           userType: 'PREMIUM',
+          isVerified: true,
         },
         { new: true }
       )
