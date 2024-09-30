@@ -280,7 +280,13 @@ const refreshToken = async (token: string) => {
     profilePhoto: user.profilePhoto,
     mobileNumber: user.mobileNumber,
     role: user.role,
+    userType: user.userType,
     status: user.status,
+    followers: user.followers,
+    following: user.following,
+    isVerified: user.isVerified,
+    totalCost: user.totalCost,
+    paymentStatus: user.paymentStatus,
   }
 
   const accessToken = createToken(
@@ -389,6 +395,14 @@ const resetPassword = async (
   )
 }
 
+const getMeFromDB = async (userId: string) => {
+  const result = await User.findOne({ _id: userId })
+    .populate('followers')
+    .populate('following')
+
+  return result
+}
+
 export const AuthServices = {
   signUpUserIntoDb,
   signInUserIntoDb,
@@ -398,4 +412,5 @@ export const AuthServices = {
   refreshToken,
   forgetPassword,
   resetPassword,
+  getMeFromDB,
 }

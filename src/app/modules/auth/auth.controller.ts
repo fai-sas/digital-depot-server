@@ -126,6 +126,19 @@ const resetPassword = catchAsync(async (req, res) => {
   })
 })
 
+const getMe = catchAsync(async (req, res) => {
+  const userId = req.user.userId
+
+  const result = await AuthServices.getMeFromDB(userId)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User is retrieved successfully',
+    data: result,
+  })
+})
+
 export const AuthControllers = {
   signUpUser,
   signInUser,
@@ -135,4 +148,5 @@ export const AuthControllers = {
   refreshToken,
   forgetPassword,
   resetPassword,
+  getMe,
 }

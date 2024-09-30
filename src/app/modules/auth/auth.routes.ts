@@ -27,6 +27,8 @@ router.post(
   AuthControllers.signInUser
 )
 
+router.get('/me', auth(USER_ROLE.USER, USER_ROLE.ADMIN), AuthControllers.getMe)
+
 router.post(
   '/social-login',
   validateRequest(AuthValidation.socialLoginValidationSchema),
@@ -42,7 +44,7 @@ router.post(
 
 router.post(
   '/refresh-token',
-  validateRequestCookies(AuthValidation.refreshTokenValidationSchema),
+  // validateRequestCookies(AuthValidation.refreshTokenValidationSchema),
   AuthControllers.refreshToken
 )
 
